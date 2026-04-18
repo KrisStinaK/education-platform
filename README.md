@@ -1,59 +1,49 @@
-# Soft -  Образовательная платформа с встроенным чатом Django Websocket
+# Умный Кот — Образовательная платформа с чатом в реальном времени
 
-# Установка и запуск
+Современная образовательная платформа на Django с поддержкой живых чатов через WebSocket.  
+Идеально подходит для онлайн-курсов, вебинаров и группового обучения.
 
-Клонируйте репозиторий
+## 🚀 Основные возможности
+
+- 📚 **Управление курсами** — создание уроков, модулей и тестов
+- 👥 **Роли пользователей** — студент, преподаватель, администратор
+- 💬 **Чат в реальном времени** — общение внутри курсов
+- 🔔 **Уведомления** — о новых сообщениях и событиях в чате
+- 📊 **Прогресс обучения** — отслеживание прохождения материалов
+- 🧪 **Тестирование** — встроенные тесты с автоматической проверкой
+- 📱 **Адаптивный дизайн** — работает на всех устройствах
+
+## 🛠 Технологии
+
+- **Backend:** Django 5.x, Django Channels
+- **WebSockets:** Daphne / Redis
+- **Database:** PostgreSQL / SQLtie (для разработки)
+- **Frontend:** HTML5, CSS, JavaScript (WebSocket API)
+- **Authentication:** Django Auth
+- **Async:** ASGI, async views
+
+## 📋 Требования
+
+- Python 3.10+
+- Django 5.x
+- Redis (для production-окружения)
+
+## 🏗 Установка и запуск
+
+### 1. Клонирование репозитория
+
 ```bash
-git clone 
+git clone https://github.com/KrisStinaK/education-platform.git
+cd education-platform
 ```
-Перед установкой зависимостей необходимо скачать [C++ Build Tools](https://stackoverflow.com/questions/40504552/how-to-install-visual-c-build-tools) Они нужны для сборки некоторых библиотек.
-
-# Установка зависимостей
-
-В папке проекта (`/django-websocket-chat/`) выполните команду:
+2. Настройка виртуального окружения
+```
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# или
+venv\Scripts\activate     # Windows
+```
+3. Установка зависимостей
 ```
 pip install -r requirements.txt
 ```
-
-#  Redis
-
-## Linux/Mac OS
-
-Скачайте [Redis](https://redis.io) и запустите его
-
-## Windows
-- Установите [WSL2](https://docs.microsoft.com/ru-ru/windows/wsl/install)
-- В WSL установите  `redis-server`:
-
-```bash
-sudo apt-add-repository ppa:redislabs/redis
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install redis-server
-```
-
-Запустите `redis-sever`:
-```bash
-sudo service redis-server start
-```
-
-# Запуск 
-Сделайте и заполните файл `.env` в соответствии с `.env.example`
-
-Перейдите в директорию django-проекта:
-```shell
-cd chat
-```
-
-Запустите приложение командой
-
-```shell
-python manage.py runserver
-```
-
-# Технические детали
-- Python 3.10.4 
-- Django 3.2.13
-- БД: SQLite
-- Библиотека для работы с вебсокетами: channels 3.0.4 
-- CSS препроцессор: SCSS
