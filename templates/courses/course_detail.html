@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ course.title }}</h1>
+        <p class="lead">{{ course.description }}</p>
+
+        <div class="mb-4">
+            <p><strong>Преподаватель:</strong> {{ course.instructor.username }}</p>
+            <p><strong>Дата создания:</strong> {{ course.created_at|date:"d.m.Y" }}</p>
+            <p><strong>Уроки:</strong> {{ course.lessons.count }}</p>
+        </div>
+
+        {% if not enrollment %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg">
+                Записаться на курс
+            </button>
+        </form>
+        {% else %}
+        <div class="alert alert-success">
+            ✅ Вы записаны на этот курс!
+            <a href="{% url 'chat:chat_rooms' %}?course_id={{ course.id }}" 
+               class="btn btn-outline-primary btn-sm ms-2">Перейти в чат курса</a>
+        </div>
+
+        <h3>Уроки курса</h3>
+        <div class="list-group">
+            {% for lesson in lessons %}
+            <a href="{% url 'courses:lesson_detail' course.id lesson.id %}" 
+               class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ lesson.title }}</h5>
+                    <small>{{ lesson.order }} урок</small>
+                </div>
+                <p class="mb-1">{{ lesson.content|truncatewords:15 }}</p>
+            </a>
+            {% empty %}
+            <p class="text-muted">Уроки скоро появятся</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Информация о курсе</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Статус:</strong> 
+                {% if enrollment %}Активный{% else %}Доступен{% endif %}</p>
+
+                <p><strong>Прогресс:</strong> 
+                {% if enrollment %}
+                    {{ enrollment.progress }}%
+                {% else %}
+                    Не начат
+                {% endif %}</p>
+
+                {% if lessons.first.id %}
+                <a href="{% url 'courses:lesson_detail' course.id lessons.first.id %}" 
+                   class="btn btn-primary w-100" style="background: #8DDDFF; border: none;">Начать обучение</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if course.instructor == user %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Управление курсом</h5>
+            </div>
+            <div class="card-body">
+                <a href="#" class="btn btn-outline-secondary btn-sm">Редактировать</a>
+                <a href="{% url 'courses:lesson_create' %}" class="btn btn-outline-secondary btn-sm">Добавить урок</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,630 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Google Fonts & Font Awesome для иконок -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* простой контейнер */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* шапка */
+        .navbar {
+            padding: 20px 0;
+            border-bottom: 1px solid #eef2f6;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f3b5c;
+            letter-spacing: -0.3px;
+        }
+
+        .logo i {
+            color: #3b82f6;
+            margin-right: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #0f3b5c;
+        }
+
+        .btn-outline {
+            border: 1px solid #cbd5e1;
+            padding: 6px 18px;
+            border-radius: 30px;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary {
+            background: #0f3b5c;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #1e4a76;
+            transform: translateY(-1px);
+        }
+
+        /* hero секция */
+        .hero {
+            padding: 60px 0 40px;
+        }
+
+        .hero-grid {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #0c2e46;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 28px;
+            max-width: 90%;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 12px 28px;
+            font-size: 1rem;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            width: 380px;
+        }
+
+        /* секция преимуществ (простая сетка) */
+        .features {
+            padding: 70px 0;
+            background: #f9fbfd;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: #0c2e46;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 28px 20px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f8;
+            transition: 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: #cbdff2;
+            box-shadow: 0 12px 22px -12px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            color: #546d82;
+        }
+
+        /* популярные курсы */
+        .courses {
+            padding: 70px 0;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .course-item {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #edf2f7;
+            transition: 0.2s;
+        }
+
+        .course-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.08);
+        }
+
+        .course-thumb {
+            background: #eef3fc;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #2c6280;
+        }
+
+        .course-info {
+            padding: 20px 20px 24px;
+        }
+
+        .course-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: #6b7f94;
+            margin: 10px 0;
+        }
+
+        .price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #0f3b5c;
+            margin: 12px 0;
+        }
+
+        .btn-sm {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #0f3b5c;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            color: #0f3b5c;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-sm:hover {
+            background: #0f3b5c;
+            color: white;
+        }
+
+        /* отзывы простые */
+        .testimonials {
+            background: #f9fbfd;
+            padding: 70px 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 32px;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 24px;
+            border-radius: 28px;
+            border: 1px solid #eef2f6;
+        }
+
+        .testimonial i {
+            font-size: 1.8rem;
+            color: #a5c9ff;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .testimonial p {
+            margin-bottom: 18px;
+            color: #2c3e50;
+        }
+
+        .student {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: #0f3b5c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* призыв к действию */
+        .cta {
+            background: #0f3b5c;
+            margin: 40px auto 60px;
+            border-radius: 36px;
+            padding: 56px 32px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            margin-bottom: 28px;
+            opacity: 0.9;
+        }
+
+        .cta .btn-white {
+            background: white;
+            color: #0f3b5c;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .cta .btn-white:hover {
+            background: #eef2ff;
+            transform: scale(1.02);
+        }
+
+        /* подвал */
+        footer {
+            background: #0b2a3b;
+            color: #bfd7e8;
+            padding: 48px 0 24px;
+            border-radius: 32px 32px 0 0;
+            margin-top: 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 40px;
+            margin-bottom: 36px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #bfd7e8;
+            text-decoration: none;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid #234e66;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 750px) {
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            .nav-inner {
+                flex-direction: column;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .hero-text p {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container nav-inner">
+        <div class="logo">
+            <i class="fas fa-brain"></i> Умный Кот
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Курсы</a></li>
+            <li><a href="#">Чаты</a></li>
+            <li><a href="#">Тесты</a></li>
+            <li><a href="#">Профиль</a></li>
+            <li><a href="#">О нас</a></li>
+            <li><a href="#">Контакты</a></li>
+            <li><a href="#" class="btn-outline">Вход</a></li>
+            <li><a href="#" class="btn-primary">Регистрация</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <!-- Hero блок -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <h1>Учитесь проще, <br>достигайте большего</h1>
+                <p>Понятные уроки, реальные проекты и поддержка. Образовательная платформа для тех, кто хочет расти.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn-primary btn-large">Начать бесплатно</a>
+                    <a href="#" class="btn-outline btn-large">Смотреть видео</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://cdn-icons-png.flaticon.com/512/4763/4763154.png" alt="Обучение иллюстрация">
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества (простая сетка) -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Почему выбирают нас</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chalkboard-user"></i></div>
+                    <h3>Опытные преподаватели</h3>
+                    <p>Практики из ведущих компаний делятся реальными кейсами.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h3>Интерактивные задания</h3>
+                    <p>Тренажеры, тесты и проекты для закрепления навыков.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+                    <h3>Сертификаты</h3>
+                    <p>Документ об окончании курса для портфолио и резюме.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Гибкий график</h3>
+                    <p>Учитесь в удобное время, доступ к материалам 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные курсы -->
+    <section class="courses">
+        <div class="container">
+            <h2 class="section-title">Популярные курсы</h2>
+            <div class="courses-grid">
+                <div class="course-item">
+                    <div class="course-thumb"><i class="fab fa-python fa-3x"></i></div>
+                    <div class="course-info">
+                        <h3>Python с нуля</h3>
+                        <div class="course-meta"><span><i class="far fa-clock"></i> 24 ч</span><span><i class="fas fa-signal"></i> Начинающий</span></div>
+                        <p>Основы Python, работа с данными и первые проекты.</p>
+                        <div class="price">₽ 5 900</div>
+                        <a href="#" class="btn-sm">Подробнее →</a>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <div class="course-thumb"><i class="fas fa-chart-line fa-3x"></i></div>
+                    <div class="course-info">
+                        <h3>Анализ данных</h3>
+                        <div class="course-meta"><span><i class="far fa-clock"></i> 32 ч</span><span><i class="fas fa-chart-simple"></i> Средний</span></div>
+                        <p>Pandas, визуализация, SQL для аналитики.</p>
+                        <div class="price">₽ 8 900</div>
+                        <a href="#" class="btn-sm">Подробнее →</a>
+                    </div>
+                </div>
+                <div class="course-item">
+                    <div class="course-thumb"><i class="fas fa-pen-fancy fa-3x"></i></div>
+                    <div class="course-info">
+                        <h3>Веб-дизайн</h3>
+                        <div class="course-meta"><span><i class="far fa-clock"></i> 28 ч</span><span><i class="fas fa-palette"></i> С нуля</span></div>
+                        <p>Figma, прототипирование и дизайн-системы.</p>
+                        <div class="price">₽ 7 500</div>
+                        <a href="#" class="btn-sm">Подробнее →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Что говорят студенты</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <i class="fas fa-quote-left"></i>
+                    <p>«Курс по Python дал мне уверенность в коде. Через месяц после обучения нашел первую работу стажером!»</p>
+                    <div class="student">
+                        <div class="avatar">АК</div>
+                        <div><strong>Алексей К.</strong><br>Junior разработчик</div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <i class="fas fa-quote-left"></i>
+                    <p>«Очень удобная платформа, все структурировано. Отдельное спасибо кураторам за обратную связь».</p>
+                    <div class="student">
+                        <div class="avatar">МВ</div>
+                        <div><strong>Мария В.</strong><br>Data Analyst</div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <i class="fas fa-quote-left"></i>
+                    <p>«Сочетал учебу с работой, доступ к лекциям оставался всегда. Сдал итоговый проект на отлично!»</p>
+                    <div class="student">
+                        <div class="avatar">ДП</div>
+                        <div><strong>Дмитрий П.</strong><br>Project manager</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA секция -->
+    <div class="container">
+        <div class="cta">
+            <h2>Готовы начать обучение?</h2>
+            <p>Присоединяйтесь к сообществу УмныйКот и получите первый урок бесплатно.</p>
+            <a href="#" class="btn-white">Записаться сейчас →</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4><i class="fas fa-graduation-cap"></i> Умный Кот</h4>
+                <p>Образование без границ. Доступные курсы для всех.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Обучение</h4>
+                <ul>
+                    <li><a href="#">Все курсы</a></li>
+                    <li><a href="#">Программы</a></li>
+                    <li><a href="#">Для компаний</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Ресурсы</h4>
+                <ul>
+                    <li><a href="#">Блог</a></li>
+                    <li><a href="#">Поддержка</a></li>
+                    <li><a href="#">Политика</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> smart_cat@gmail.com</li>
+                    <li><i class="fas fa-phone"></i> +7(909)573-58-76</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2026 Умный Кот — образовательная платформа. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+    
+    <div class="container mt-4">
+        
+        
+
+        {% block content %}
+        
+        {% endblock %}
+    </div>
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

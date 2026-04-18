@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+ <style>
+    form { max-width: 600px; margin: 0 auto; display: grid; gap: 12px; }
+    label { font-weight: bold; display: block; margin-bottom: 4px; }
+    input[type="text"],
+    input[type="email"],
+    textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    textarea { min-height: 120px; resize: vertical; }
+    .row { display: flex; gap: 12px; align-items: center; }
+    .row > div { flex: 1; }
+    .buttons { display: flex; justify-content: flex-end; gap: 10px; }
+    .avatar-preview { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 1px solid #ccc; }
+    input[type="file"] { display: block; }
+  </style>
+
+<form method="post" enctype="multipart/form-data" id="profileForm" autocomplete="off">
+    {% csrf_token %}
+    <div class="row">
+      <div>
+        <label for="name">Имя</label>
+        {{u_form.username}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="email">Электронная почта</label>
+        {{u_form.email}}
+      </div>
+    </div>
+
+    <div>
+      <label for="bio">Биография</label>
+        {{p_form.bio}}
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="avatar">Аватар</label>
+        {{p_form.image}}
+      </div>
+      <div>
+        <label>Предпросмотр</label><br />
+        <img id="avatarPreview" class="avatar-preview" src="{{ user.profile.image.url }}" alt="Предпросмотр аватара" />
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button type="button" onclick="window.history.back()">Отмена</button>
+      <button type="submit">Сохранить</button>
+    </div>
+  </form>
+
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>История результатов</h1>
+    <table>
+        <tr>
+            <th>Тест</th>
+            <th>Дата</th>
+            <th>Результат</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.test.title }}</td>
+            <td>{{ result.date_taken }}</td>
+            <td>{{ result.score }} / {{ result.total_questions }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Умный Кот — обучающая платформа{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'icon/favicon.png' %}" type="image/x-icon">
+</head>
+<style>
+    body{
+        font-family: 'Arial', sans-serif;
+        background: #ffffff;
+    }
+    button{background-color: rgba(255, 255, 255, 0); border: none; outline: none;}
+    dialog{
+        width: 300px;
+        position: fixed;
+        z-index: 5;
+        right: 0;
+    }
+
+    /* ========== HEADER ========== */
+    a {
+        text-decoration: none;
+        color: #C5AAEA;
+    }
+
+    a:hover{
+        color: #8DDDFF;
+    }
+        .header {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background: rgba(225, 225, 225, 0.96);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 5px 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #8DDDFF, #2A5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .round{
+            display: none;
+        }
+        .logo i {
+            background: none;
+            background-clip: unset;
+            color: #8DDDFF;
+            font-size: 1.9rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: #8DDDFF;
+        }
+        .btn-outline {
+            border: 1.5px solid #8DDDFF;
+            padding: 8px 20px;
+            border-radius: 40px;
+            background: transparent;
+            font-weight: 600;
+        }
+        .btn-outline:hover {
+            background: #8DDDFF;
+            color: white;
+        }
+
+    @media (max-width: 992px) {
+    .nav-links{
+        display: none;
+    }
+    .round{
+        display: block;
+        border: black solid 2px;
+    }
+    nav.navbar.navbar-expand-lg.navbar-dark{
+        width: 100%;
+    }
+}
+
+</style>
+<body>
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark" style="background: #ffffff; padding: 3px;" >
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'courses:home' %}">😺 Умный Кот</a>
+
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    
+                    <a class="nav-link "  style="color: black;" href="{% url 'courses:course_list' %}">Курсы</a>
+                    <a class="nav-link" style="color: black;" href="{% url 'chat:chat_rooms' %}">Чат</a>
+                    <a class="nav-link" style="color: black;" href="{% url 'quizzes:quiz_list' %}">Тесты</a>
+                    <a class="nav-link" style="color: black;" href="{% url 'users:profile' %}">Профиль</a>
+                    <img style="margin-left: 25px; max-width: 35px; max-height: 35px;" class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                    <b><a style="color: rgb(0, 0, 0);" class="nav-link" href="{% url 'users:profile' %}">{{user.username}}</a></b>
+                    
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button id="b1" class="nav-link" height="10px" type="submit">Выйти</button>
+                    </form>
+                    
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                    <a class="nav-link" href="{% url 'users:signup' %}">Регистрация</a>
+                {% endif %}
+            </div>
+            <button class="round" type="button" onclick="window.myDialog.show()">
+                    <b>...</b>
+                </button>
+        </div>
+    </nav> -->
+    <header class="header">
+            <div class="container">
+                <div class="header-inner">
+                    <div class="logo">
+                        <i class="fas fa-chalkboard-user"></i>
+                        <a href="{% url 'courses:home' %}"><span>Умный Кот</span></a>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="nav-links">
+                            <a href="{% url 'courses:home' %}">Главная</a>
+                            <a href="{% url 'courses:course_list' %}">Курсы</a>
+                            <a href="{% url 'chat:chat_rooms' %}">Чат</a>
+                            <a href="{% url 'quizzes:quiz_list' %}">Тесты</a>
+                            <a href="{% url 'users:profile' %}">Профиль</a>
+                            <img style="max-width: 35px; max-height: 35px; padding-right: 0;" class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                            <b><a style="color: rgb(0, 0, 0);" href="{% url 'users:profile' %}">{{user.username}}</a></b>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn-outline" type="submit">Выйти</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}">Войти</a>
+                        <a href="{% url 'users:signup' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+                <button class="round" type="button" onclick="window.myDialog.show()">
+                    <b>...</b>
+                </button>
+            </div>
+        </header>
+    <dialog id="myDialog">
+                {% if user.is_authenticated %}
+                    <a class="nav-link " href="{% url 'courses:home' %}">Главная</a>
+                    <a class="nav-link " href="{% url 'courses:course_list' %}">Курсы</a>
+                    <a class="nav-link" href="{% url 'chat:chat_rooms' %}">Чат</a>
+                    <a class="nav-link" href="{% url 'users:profile' %}">Профиль</a>
+                    <img style="margin-left: 25px; max-width: 35px; max-height: 35px;" class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                    <b><a class="nav-link" href="{% url 'users:profile' %}">{{user.username}}</a></b>
+                    
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button id="b1" class="nav-link" height="10px" type="submit">Выйти</button>
+                    </form>
+                    
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                    <a class="nav-link" href="{% url 'users:signup' %}">Регистрация</a>
+                {% endif %}
+                    <button type="button" onclick="window.myDialog.close()">
+                        Закрыть
+                    </button>
+        </dialog>
+        
+    
+    <div class="container mt-4">
+        
+        
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

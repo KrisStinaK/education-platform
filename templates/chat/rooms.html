@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+ <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #1e88e5;
+      --border: #e5e7eb;
+      --shadow: 0 4px 12px rgba(0,0,0,.05);
+    }
+    * { box-sizing: border-box; }
+    h1 {
+      font-size: 35px;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .search input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
+    }
+
+    .chat-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      transition: transform .08s ease, background .2s ease;
+      position: relative;
+      min-height: 72px;
+      box-shadow: var(--shadow);
+    }
+    .chat-item:hover { background: #f9fbfe; }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #eceff4; display: inline-flex; align-items: center; justify-content: center;
+      font-weight: bold; color: #374151;
+    }
+
+    /* Медиазапросы для мобильной версий */
+    @media (max-width: 600px) {
+      .container { padding: 12px; }
+      .list { grid-template-columns: 1fr; }
+      .chat-item { min-height: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <h1>Чаты</h1>
+
+    <!-- Поиск -->
+        <form method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" 
+                       placeholder="Поиск чатов..." value="{{ query|default:'' }}">
+                <button class="btn btn-dark" style="background: #FFE345;" type="submit">Найти</button>
+            </div>
+        </form>
+    
+        <div class="actions">
+            <button class="btn" id="newChatBtn" title="Создать чат">Новый чат</button>
+            <button class="btn" id="settingsBtn" title="Настройки">Настройки</button>
+        </div>
+
+    <ul class="list" id="chatList" aria-label="Список чатов">
+      <!-- Пример элемента чата -->
+       {% for room in rooms %}
+      <li class="chat-item" data-chat-id="1" tabindex="0">
+        <div class="avatar" aria-label="Аватар">A</div>
+        <div class="chat-info">
+          <div class="chat-title" title="Алексей"><a href="{% url 'chat:chat_room' room.id %}">
+                        <h5>{{ room.name }}</h5></a></div>
+        </div>
+        <!-- <span class="unread" aria-label="Непрочитанные сообщения">2</span> -->
+      </li>
+      {% endfor %}
+
+      <!-- Конец примеров -->
+    </ul>
+  </div>
+    <!-- <div class="row">
+            {% for room in rooms %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <a href="{% url 'chat:chat_room' room.id %}"><div class="card-body">
+                        <h5 class="card-title">{{ room.name }}</h5>
+                    </div></a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">У вас пока нет чатов</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div> -->
+{% endblock %}

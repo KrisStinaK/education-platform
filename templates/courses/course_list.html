@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .btn:hover{
+        border: black 1px solid;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+
+    .cards { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .cards img { width: 100%; height: 150px; object-fit: cover; }
+    .cardContent { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .cardTitle { font-weight: 600; }
+    .cardMeta { color: var(--muted); font-size: 0.9rem; }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #eef5ff; color: #2b6cb0; font-size: 0.75rem; }
+    
+</style>
+{% include 'message.html' %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Доступные курсы</h1>
+
+        <!-- Поиск -->
+        <form method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" 
+                       placeholder="Поиск курсов..." value="{{ query|default:'' }}">
+                <button class="btn" style="background: #8DDDFF; color:white;" type="submit">Найти</button>
+            </div>
+        </form>
+
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-md-6 mb-4">
+                <article class="cards">
+                    <img src="{{ course.images.url }}">
+                    <div class="cardContent">
+                        <div class="cardTitle">{{ course.title }}</div>
+                        <div class="cardMeta">Преподаватель: {{ course.instructor.username }}</div>
+                        <div class="cardMeta">Дата создания: {{ course.created_at|date:"d.m.Y" }}</div>
+                        <span class="tag">Базовый</span>
+                    </div>
+                    {% if user.id in user_enrollments %}
+                        <a href="{% url 'courses:course_detail' course.pk %}" 
+                            class="btn btn-success" style="background: #00E5D2; border: none;">Учиться</a>
+                    {% else %}
+                        <a href="{% url 'courses:course_detail' course.pk %}" 
+                            class="btn btn-primary" style="background: #00E5D2; border: none;">Подробнее</a>
+                    {% endif %}
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">Курсы не найдены.</p>
+            </div>
+            {% endfor %}
+                
+        </div>
+    </div>
+                
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Ваши курсы</h5>
+            </div>
+            <div class="card-body">
+                {% for enrollment in user_enrollments %}
+                    {{enrollment}}
+                        <a href="{% url 'courses:course_detail' enrollment %}" class="text-decoration-none">
+                            <small class="d-block mb-1">{{ course.title }}</small>
+                        </a>
+                {% empty %}
+                    <small class="text-muted">Нет записей на курсы</small>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Популярные курсы</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">Скоро здесь будут популярные курсы</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

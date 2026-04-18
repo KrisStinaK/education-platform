@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+{% load course_tags %}
+{% block content %}
+    
+    <style>
+        .progress-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #progressbar {
+            list-style-type: none;
+            display: flex;
+            justify-content: space-between;
+            color: lightgrey;
+        }
+
+        #progressbar li {
+            flex: 1;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        #progressbar li.active {
+            color: #2F8D46;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: lightgray;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: #2F8D46;
+            width: 0;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .step-container fieldset {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            padding-bottom: 20px;
+            position: relative;
+            display: none;
+        }
+
+        .step-container fieldset:first-of-type {
+            display: block;
+        }
+
+        h2 {
+            color: #2F8D46;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .next-step,
+        .previous-step {
+            width: 100px;
+            font-weight: bold;
+            color: white;
+            border: 0 none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 5px;
+            margin: 10px 5px 10px 0px;
+            float: right;
+        }
+
+        .next-step {
+            background: #2F8D46;
+        }
+
+        .previous-step {
+            background: #616161;
+        }
+
+        .next-step:hover,
+        .next-step:focus {
+            background-color: #1e6f3e;
+        }
+
+        .previous-step:hover,
+        .previous-step:focus {
+            background-color: #4d4d4d;
+        }
+
+        .text {
+            color: #2F8D46;
+            font-weight: normal;
+        }
+
+        .finish {
+            text-align: center;
+        }
+        img{
+            width: 100%;
+        }
+        .container2 {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .lesson-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .lesson-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .lesson-info div {
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .video-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .lesson-description {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .comments-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .comments-section h3 {
+            margin-top: 0;
+        }
+        .comment {
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .comment:first-child {
+            border-top: none;
+        }
+        .comment-author {
+            font-weight: bold;
+        }
+        .comment-text {
+            margin-top: 5px;
+        }
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .buttons button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .edit-btn {
+            background: #C5AAEA;
+            color: #fff;
+        }
+        .edit-btn:hover {
+            background: #8DDDFF;
+        }
+        .btn-delete {
+        background:#c7c7c7;
+        color: #fff;
+        padding: 12px 25px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        }
+        .btn-delete:hover{
+            background: #ff3300;
+        }
+        iframe{
+            height: 500px;
+        }
+        @media (max-width: 992px) {
+            iframe{
+                height: 300px;
+            }}
+        @media (max-width: 480px) {
+            iframe{
+                height: 150px;
+            }}
+    </style>
+    <div class="container">
+        <div class="progress-container">
+            <ul id="progressbar">
+                <li class="active" 
+                    id="step1">
+                    <strong>Step 1</strong>
+                </li>
+                <li id="step2">
+                      <strong>Step 2</strong>
+                  </li>
+                <li id="step3">
+                      <strong>Step 3</strong>
+                  </li>
+                <li id="step4">
+                      <strong>Step 4</strong>
+                  </li>
+            </ul>
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="step-container">
+            <fieldset>
+                <div class="lesson-title">Название урока: {{lesson.title}}</div>
+                    <div class="lesson-info">
+                        <div>Автор: {{course.instructor}}</div>
+                        <div>Дата публикации: {{lesson.created_at|date:"d.m.Y"}}</div>
+                    </div>
+                    <div class="video-section">
+                                <h2>Видеоурок</h2>
+                            <iframe width="100%" src="{{lesson.url}}" style="border: none;" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    </div>
+                
+                <input type="button"
+                       name="next-step"
+                       class="next-step"
+                       value="Далее" />
+            </fieldset>
+            <fieldset>
+                
+                <div class="container2">
+                    
+                    
+                    <div class="lesson-description">
+                        <h2>Описание урока</h2>
+                        {% if lesson.images %}
+                            <img src="{{lesson.images.url}}" alt="">
+                        {% endif %}
+                        <p>{{lesson.content|markdown}}</p>
+
+                    </div>
+                <input type="button"
+                       name="next-step" 
+                       class="next-step" 
+                       value="Далее" />
+                <input type="button"
+                       name="previous-step" 
+                       class="previous-step" 
+                       value="Назад" />
+            </fieldset>
+            <fieldset>
+                <h2>Welcome To GFG Step 3</h2>
+                <input type="button" 
+                       name="next-step" 
+                       class="next-step" 
+                       value="Final Step" />
+                <input type="button" 
+                       name="previous-step" 
+                       class="previous-step" 
+                       value="Назад" />
+            </fieldset>
+            <fieldset>
+                <div class="finish">
+                    <h2 class="text">
+                        <strong>FINISHED</strong>
+                    </h2>
+                </div>
+                <input type="button" 
+                       name="next-step" 
+                       class="next-step" 
+                       value="Следующий урок" />
+                <input type="button" 
+                       name="previous-step" 
+                       class="previous-step"
+                       value="Назад" />
+                
+            </fieldset>
+        </div>
+    </div>
+    
+        <div class="comments-section">
+            <h3>Комментарии</h3>
+            <div class="comment">
+                <div class="comment-author">Пользователь1</div>
+                <div class="comment-text">Отличный урок! Всё понятно и доступно.</div>
+            </div>
+            <div class="comment">
+                <div class="comment-author">Пользователь2</div>
+                <div class="comment-text">Спасибо! Хотелось бы больше практических заданий.</div>
+            </div>
+            <a href="#" class="btn">Оставить комментарий</a>
+                        {% if course.instructor == user %}
+                <div class="buttons">
+                    <form action="{% url 'courses:lesson_edit' course.id lesson.id %}">
+                        <button class="edit-btn">Редактировать урок</button>
+                    </form>
+                    <form action="{% url 'courses:lesson_delete' course.id lesson.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete">Удалить</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const progressListItems = 
+                document.querySelectorAll("#progressbar li");
+            const progressBar =
+                document.querySelector(".progress-bar");
+            let currentStep = 0;
+
+            function updateProgress() {
+                const percent = 
+                    (currentStep / (progressListItems.length - 1)) * 100;
+                progressBar.style.width = percent + "%";
+
+                progressListItems.forEach((item, index) => {
+                    if (index === currentStep) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                });
+            }
+
+            function showStep(stepIndex) {
+                const steps =
+                    document.querySelectorAll(".step-container fieldset");
+                steps.forEach((step, index) => {
+                    if (index === stepIndex) {
+                        step.style.display = "block";
+                    } else {
+                        step.style.display = "none";
+                    }
+                });
+            }
+
+            function nextStep() {
+                if (currentStep < progressListItems.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                    updateProgress();
+                }
+            }
+
+            function prevStep() {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                    updateProgress();
+                }
+            }
+
+            const nextStepButtons = 
+                document.querySelectorAll(".next-step");
+            const prevStepButtons = 
+                document.querySelectorAll(".previous-step");
+
+            nextStepButtons.forEach((button) => {
+                button.addEventListener("click", nextStep);
+            });
+
+            prevStepButtons.forEach((button) => {
+                button.addEventListener("click", prevStep);
+            });
+        });
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.chat-messages {
+    background-color: #f8f9fa;
+}
+
+.message {
+    margin: 10px;
+    padding: 10px;
+}
+
+.message-left .message-content {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 70%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-right {
+    text-align: right;
+}
+
+.message-right .message-content {
+    background: #C5AAEA;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 70%;
+    margin-left: auto;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+</style>
+<div class="row">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>{{ room.name }}</h5>
+                <a href="{% url 'chat:chat_rooms' %}" class="btn btn-outline-secondary btn-sm">← Назад</a>
+            </div>
+
+            <div class="card-body p-0">
+                <!-- Область сообщений -->
+                <div id="messages-container" class="chat-messages" style="height: 500px; overflow-y: auto;">
+                    {% for message in messages %}
+                    <div class="message {% if message.user == user %}message-right{% else %}message-left{% endif %}">
+                        <div class="message-content">
+                            <img style="max-width: 35px; max-height: 35px;" class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                            <strong>{{ message.user.username }}:</strong>
+                            <small class="text-muted">{{ message.timestamp|date:"Y.m.d H:i A" }}</small>
+                            <p>{{ message.content }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Форма отправки сообщения -->
+                <div class="card-footer">
+                    <form id="message-form" class="d-flex" method="post">
+                        <input type="text" id="message-input" class="form-control me-2" 
+                               placeholder="Введите сообщение..." required>
+                        <button type="submit" class="btn btn-primary" style="background: #8DDDFF;">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h6>Участники</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Участники чата скоро будут отображаться здесь</p>
+            </div>
+        </div>
+
+        {% if room.course %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6>Курс</h6>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'courses:course_detail' room.course.id %}" 
+                   class="text-decoration-none">
+                    {{ room.course.title }}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- WebSocket подключение -->
+<script>
+    const roomId = '{{ room.id }}';
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.type === 'load_messages') {
+            // Сообщения уже загружены на сервере
+            return;
+        }
+
+        const message = data.message;
+        const isOwnMessage = data.user_id === '{{ user.id }}';
+
+        const messagesContainer = document.getElementById('messages-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isOwnMessage ? 'message-right' : 'message-left'}`;
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <small class="text-muted">${data.timestamp}</small>
+                <strong>${data.username}:</strong>
+                <p>${message}</p>
+            </div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Чат отключен');
+    };
+
+    document.getElementById('message-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInput.value = '';
+    });
+</script>
+
+
+{% endblock %}

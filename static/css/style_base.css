@@ -1,0 +1,42 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.course-card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 6px;
+}
+
+.chat-messages {
+    border: 1px solid #dee2e6;
+}
+
+.message-content p {
+    margin: 5px 0 0 0;
+    word-wrap: break-word;
+}
+
+.message-left {
+    margin-right: 50px;
+}
+
+.message-right {
+    margin-left: 50px;
+}

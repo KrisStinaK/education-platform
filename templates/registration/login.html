@@ -1,0 +1,120 @@
+{% block content %}
+<style>
+    body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #8DDDFF, #C5AAEA); /* Градиентный фон */
+    margin: 0;
+    color: #fff;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон контейнера */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Тень для глубины */
+        text-align: center;
+    }
+
+    .login-box {
+        width: 350px;
+    }
+    a{
+        color: #00ffea;
+        text-decoration: none;
+    }
+
+    h2 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #eee;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.8); /* Светлый фон для полей ввода */
+        box-sizing: border-box; /* Учитывает padding и border в общей ширине */
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-group input:focus {
+        outline: none;
+        border-color: #6e8efb;
+        box-shadow: 0 0 8px rgba(110, 142, 251, 0.5); /* Подсветка при фокусе */
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #00E5D2, #C5AAEA); /* Такой же градиент, как у фона */
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(135deg, #00E5D2, #FFE345); /* Инвертированный градиент при наведении */
+        transform: translateY(-2px); /* Небольшой подъем */
+    }
+
+    button:active {
+        transform: translateY(0); /* Возврат при нажатии */
+    }
+
+    .message {
+        margin-top: 20px;
+        color: #ff3c00;
+        font-size: 20px;
+    }
+
+
+</style>
+    <div class="container">
+        <div class="login-box">
+            <h2>Вход</h2>
+            
+            <form id="loginForm" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="username">Имя пользователя</label>
+                    {{ form.username }}
+                </div>
+                <div class="input-group">
+                    <label for="password">Пароль</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit">Войти</button>
+            </form>
+            <p>Нет аккаунта? <a href="{% url 'users:signup' %}">Создайте его за минуту.</a></p>
+            {% if form.errors %}
+                <div class="message" id="message">Неверный логин или пароль</div>
+            {% endif %}
+        </div>
+    </div>
+</html>
+
+{% endblock %}
+
+

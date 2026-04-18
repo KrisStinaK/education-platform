@@ -1,0 +1,96 @@
+    body{
+        font-family: 'Arial', sans-serif;
+        background: #ffffff;
+    }
+    button{background-color: rgba(255, 255, 255, 0); border: none; outline: none;}
+    dialog{
+        width: 300px;
+        position: fixed;
+        z-index: 5;
+        right: 0;
+    }
+
+    /* ========== HEADER ========== */
+    a {
+        text-decoration: none;
+        color: #C5AAEA;
+    }
+
+    a:hover{
+        color: #8DDDFF;
+    }
+        .header {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background: rgba(225, 225, 225, 0.96);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 5px 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #8DDDFF, #2A5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .round{
+            display: none;
+        }
+        .logo i {
+            background: none;
+            background-clip: unset;
+            color: #8DDDFF;
+            font-size: 1.9rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: #8DDDFF;
+        }
+        .btn-outline {
+            border: 1.5px solid #8DDDFF;
+            padding: 8px 20px;
+            border-radius: 40px;
+            background: transparent;
+            font-weight: 600;
+        }
+        .btn-outline:hover {
+            background: #8DDDFF;
+            color: white;
+        }
+
+    @media (max-width: 992px) {
+    .nav-links{
+        display: none;
+    }
+    .round{
+        display: block;
+        border: black solid 2px;
+    }
+    nav.navbar.navbar-expand-lg.navbar-dark{
+        width: 100%;
+    }
+}

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .profile-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #FFE345;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-info h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+        }
+        .user-info p {
+            margin: 8px 0 0;
+            color: #666;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #FFE345;
+        }
+        .stat p {
+            margin-top: 8px;
+            color: #555;
+        }
+        .courses-progress {
+            margin-top: 30px;
+        }
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .course {
+            margin-bottom: 15px;
+        }
+        .course-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .progress-bar {
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+        }
+        .progress {
+            background-color: #00E5D2;
+            height: 100%;
+            width: 75%; /* Можно динамически менять */
+        }
+        .buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .buttons button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .edit-btn {
+            background: #C5AAEA;
+            color: #fff;
+        }
+        .edit-btn:hover {
+            background: #8DDDFF;
+        }
+        .logout-btn {
+            background: #8DDDFF;
+            color: #fff;
+        }
+        .logout-btn:hover {
+            background: #C5AAEA;
+        }
+        @media(max-width: 600px){
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stats {
+                flex-direction: column;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="avatar">
+            <img src="{{ user.profile.image.url }}" alt="Аватар пользователя" />
+        </div>
+        <div class="user-info">
+            <h1>{{user.username}}</h1>
+            <p>{{user.profile.bio}}</p>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat">
+            <h2>5</h2>
+            <p>Курсов завершено</p>
+        </div>
+        <div class="stat">
+            <h2>3</h2>
+            <p>Активных курса</p>
+        </div>
+        <div class="stat">
+            <h2>75%</h2>
+            <p>Общий прогресс</p>
+        </div>
+    </div>
+    
+    <div class="courses-progress">
+        <div class="section-title">Ваши курсы</div>
+        
+        <div class="course">
+            <div class="course-title">HTML и CSS для начинающих</div>
+            <div class="progress-bar">
+                <div class="progress" style="width: 80%;"></div>
+            </div>
+        </div>
+        <div class="course">
+            <div class="course-title">JavaScript базовый уровень</div>
+            <div class="progress-bar">
+                <div class="progress" style="width: 60%;"></div>
+            </div>
+        </div>
+        <div class="course">
+            <div class="course-title">Основы Python</div>
+            <div class="progress-bar">
+                <div class="progress" style="width: 50%;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="buttons">
+      <form action="{% url 'users:edit_profile' %}">
+        <button class="edit-btn">Редактировать профиль</button>
+      </form>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Выйти</button>
+      </form>
+    </div>
+</div>
+{% endblock %}
