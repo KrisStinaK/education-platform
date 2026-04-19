@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile/', include('users.urls')),
     path('courses/', include('courses.urls')),
     path('quizzes/', include('quizzes.urls', namespace='quizzes')),
+    path('certificates/', include('certificates.urls', namespace='certificates')),
     path('', include('courses.urls')),
 ]
 

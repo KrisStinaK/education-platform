@@ -8,7 +8,7 @@ from django.http import HttpResponse
 @login_required
 def issue_certificate(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    enrollment = Enrollment.objects.filter(student=request.user, course=course).first()
+    enrollment = Enrollment.objects.filter(user=request.user, course=course).first()
 
     if not enrollment:
         return HttpResponse("Вы не записаны на этот курс.")

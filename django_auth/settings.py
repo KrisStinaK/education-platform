@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'courses',
     'chat',
     'quizzes',
+    'certificates',
 
     # Channels
     'channels',

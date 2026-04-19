@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Сертификат</h2>
+    <p>Имя: {{ certificate.user.username }}</p>
+    <p>Курс: {{ certificate.course.title }}</p>
+    <p>Дата выдачи: {{ certificate.issue_date }}</p>
+    <p>Номер сертификата: {{ certificate.certificate_number }}</p>
+    <p>Этот сертификат {% if certificate.is_valid %}действителен{% else %}недействителен{% endif %}.</p>
+
+    <button onclick="window.print()">Печать сертификата</button>
+{% endblock %}

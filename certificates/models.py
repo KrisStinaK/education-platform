@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from courses.models import Course
+import random
 
 class Certificate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -15,5 +16,5 @@ class Certificate(models.Model):
     def save(self, *args, **kwargs):
         if not self.certificate_number:
             # Генерация уникального номера сертификата
-            self.certificate_number = f"{self.user.id}-{self.course.id}-{self.issue_date.strftime('%Y%m%d')}"
+            self.certificate_number = f"{self.user.id}-{self.course.id}-{random.randint(10000_00000, 99999_99999)}"
         super().save(*args, **kwargs)
