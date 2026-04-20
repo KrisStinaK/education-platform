@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.conf import settings
 
 User = get_user_model()
 
@@ -48,3 +49,14 @@ class Enrollment(models.Model):
 
     class Meta:
         unique_together = ('user', 'course')
+
+
+class CourseProgress(models.Model):
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    completed_lessons = models.ManyToManyField(Lesson, blank=True)
+    start_date = models.DateTimeField(auto_now_add=True)
+    last_activity = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Progress of {self.student.username} in {self.course.title}"

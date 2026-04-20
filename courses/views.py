@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.db.models import Q
-from .models import Course, Lesson, Enrollment
+from django.db.models import Count
+from .models import Course, Lesson, Enrollment, CourseProgress
 from .forms import LessonUpdateForm
 
 class CourseCreateView(CreateView): # новое изменение
@@ -32,25 +33,52 @@ def course_list(request):
         'query': query,
     })
 
+# @login_required
+# def course_detail(request, pk):
+#     course = get_object_or_404(Course, pk=pk, is_active=True)
+#     lessons = course.lessons.filter(is_published=True)
+
+#     # Проверка записи
+#     enrollment = Enrollment.objects.filter(user=request.user, course=course).first()
+
+#     if request.method == 'POST':
+#         if not enrollment:
+#             Enrollment.objects.create(user=request.user, course=course)
+#             messages.success(request, 'Вы успешно записались на курс!')
+#         return redirect('courses:course_detail', pk=pk)
+
+#     return render(request, 'courses/course_detail.html', {
+#         'course': course,
+#         'lessons': lessons,
+#         'enrollment': enrollment,
+#     })
+
+
 @login_required
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk, is_active=True)
-    lessons = course.lessons.filter(is_published=True)
-
-    # Проверка записи
+    lessons = Lesson.objects.filter(course=course, is_published=True).order_by('order')
     enrollment = Enrollment.objects.filter(user=request.user, course=course).first()
 
-    if request.method == 'POST':
-        if not enrollment:
-            Enrollment.objects.create(user=request.user, course=course)
-            messages.success(request, 'Вы успешно записались на курс!')
-        return redirect('courses:course_detail', pk=pk)
+    # Получаем или создаем запись о прогрессе пользователя
+    course_progress, created = CourseProgress.objects.get_or_create(student=request.user, course=course)
 
-    return render(request, 'courses/course_detail.html', {
+    context = {
         'course': course,
         'lessons': lessons,
         'enrollment': enrollment,
-    })
+        'course_progress': course_progress,
+    }
+    return render(request, 'courses/course_detail.html', context)
+
+
+@login_required
+def mark_lesson_complete(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    course_progress = CourseProgress.objects.get(student=request.user, course=lesson.course)
+    course_progress.completed_lessons.add(lesson)
+    return redirect('courses:course_detail', course_id=lesson.course.id)
+
 
 @login_required
 def lesson_detail(request, course_id, lesson_id):
@@ -125,3 +153,35 @@ def create_lesson_view(request):
         'form': form,
     }
     return render(request, 'courses/lesson_edit.html', context)
+
+@login_required
+def course_analytics(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    # Получить статистику по завершенным урокам
+    lesson_completion_counts = Lesson.objects.filter(course=course).annotate(num_completions=Count('courseprogress')).order_by('order')
+
+    # Получить список студентов, записанных на курс
+    enrolled_students = Enrollment.objects.filter(course=course).select_related('user')
+
+    # Получить число студентов, записанных на курс
+    num_enrolled_students = enrolled_students.count()
+
+    # Получить число завершенных уроков для каждого студента
+    student_progress = []
+    for student in enrolled_students:
+        num_completed_lessons = CourseProgress.objects.filter(student=student.user, course=course).first()
+        if num_completed_lessons:
+            student_progress.append({'student': student.user, 'completed_lessons_count': num_completed_lessons.completed_lessons.count()})
+        else:
+             student_progress.append({'student': student.user, 'completed_lessons_count': 0})
+
+    context = {
+        'course': course,
+        'lesson_completion_counts': lesson_completion_counts,
+        'enrolled_students': enrolled_students,
+        'num_enrolled_students': num_enrolled_students,
+        'student_progress' : student_progress,
+    }
+
+    return render(request, 'courses/course_analytics.html', context)

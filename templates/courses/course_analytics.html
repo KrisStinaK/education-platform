@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Аналитика курса: {{ course.title }}</h2>
+
+    <h3>Статистика по урокам</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название урока</th>
+                <th>Завершили</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lesson in lesson_completion_counts %}
+            <tr>
+                <td>{{ lesson.title }}</td>
+                <td>{{ lesson.num_completions }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Статистика по студентам</h3>
+    <p>Всего на курс записалось: {{ num_enrolled_students }}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Студент</th>
+                <th>Завершённые уроки</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for progress in student_progress %}
+            <tr>
+                <td>{{ progress.student.username }}</td>
+                <td>{{ progress.completed_lessons_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -14,4 +14,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('course/<int:course_id>/lesson/<int:lesson_id>/delete/', views.lesson_delete_view, name='lesson_delete'),
     path('course/<int:course_id>/lesson/<int:lesson_id>/edit/', views.edit_lesson_view, name='lesson_edit'),
+    # path('enroll/<int:course_id>/', views.enroll, name='enroll'),
+    path('<int:course_id>/analytics/', views.course_analytics, name='course_analytics'), # Новый URL для аналитики
+    path('lesson_complete/<int:lesson_id>/', views.mark_lesson_complete, name='mark_lesson_complete'), # Новый URL для отметки урока как завершенного
 ]
