@@ -59,6 +59,11 @@ def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk, is_active=True)
     lessons = Lesson.objects.filter(course=course, is_published=True).order_by('order')
     enrollment = Enrollment.objects.filter(user=request.user, course=course).first()
+    if request.method == 'POST':
+        if not enrollment:
+            Enrollment.objects.create(user=request.user, course=course)
+            messages.success(request, 'Вы успешно записались на курс!')
+        return redirect('courses:course_detail', pk=pk)
 
     # Получаем или создаем запись о прогрессе пользователя
     course_progress, created = CourseProgress.objects.get_or_create(student=request.user, course=course)
@@ -77,7 +82,7 @@ def mark_lesson_complete(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     course_progress = CourseProgress.objects.get(student=request.user, course=lesson.course)
     course_progress.completed_lessons.add(lesson)
-    return redirect('courses:course_detail', course_id=lesson.course.id)
+    return redirect('courses:course_detail', lesson.course.id)
 
 
 @login_required
