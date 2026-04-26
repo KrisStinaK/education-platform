@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from .forms import ProfileUpdateForm, UserUpdateForm
+from courses.models import Enrollment, Course
 from django.contrib import messages
 
 
@@ -15,7 +16,14 @@ class SignUp(CreateView):
 
 @login_required
 def profile_view(request):
-    return render(request, 'users/profile.html')
+    courses = Course.objects.filter(is_active=True)
+    completed_courses = Enrollment.objects.filter(is_completed=True)
+    user_enrollments = Enrollment.objects.filter(user=request.user).values_list('course_id', flat=True)
+    context = {'user_enrollments': user_enrollments,
+               'active_courses': len(user_enrollments),
+               'courses': courses,
+               'completed_courses': len(completed_courses)}
+    return render(request, 'users/profile.html', context)
 
 @login_required
 def edit_profile(request):
@@ -28,7 +36,7 @@ def edit_profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f'Ваш профиль успешно обновлен.')
-            return redirect('courses:profile')
+            return redirect('users:profile')
 
     else:
         u_form = UserUpdateForm(instance=request.user)

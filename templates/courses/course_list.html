@@ -35,7 +35,11 @@
             {% for course in courses %}
             <div class="col-md-6 mb-4">
                 <article class="cards">
-                    <img src="{{ course.images.url }}">
+                    {% if course.images %}
+                        <img src="{{ course.images.url }}">
+                    {% else %}
+                        <img src="{% static 'img/11.png' %}">
+                    {% endif %}
                     <div class="cardContent">
                         <div class="cardTitle">{{ course.title }}</div>
                         <div class="cardMeta">Преподаватель: {{ course.instructor.username }}</div>
@@ -67,14 +71,17 @@
                 <h5>Ваши курсы</h5>
             </div>
             <div class="card-body">
-                {% for enrollment in user_enrollments %}
-                    {{enrollment}}
-                        <a href="{% url 'courses:course_detail' enrollment %}" class="text-decoration-none">
-                            <small class="d-block mb-1">{{ course.title }}</small>
+                <ul>
+                {% for course in courses %}
+                    {% if course.id in user_enrollments %}
+                        <a href="{% url 'courses:course_detail' course.id %}" class="text-decoration-none">
+                            <li><small class="d-block mb-1">{{ course.title }}</small></li>
                         </a>
+                    {% endif %}
                 {% empty %}
                     <small class="text-muted">Нет записей на курсы</small>
                 {% endfor %}
+                </ul>
             </div>
         </div>
 
@@ -83,7 +90,15 @@
                 <h5>Популярные курсы</h5>
             </div>
             <div class="card-body">
-                <small class="text-muted">Скоро здесь будут популярные курсы</small>
+                <ul>
+                {% for course in courses_pop %}
+                    <a href="{% url 'courses:course_detail' course.id %}" class="text-decoration-none">
+                            <li><small class="d-block mb-1">{{ course.title }}</small></li>
+                    </a>
+                {% empty %}
+                    <small class="text-muted">Скоро здесь будут популярные курсы</small>
+                {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

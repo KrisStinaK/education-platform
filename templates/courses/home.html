@@ -47,7 +47,6 @@
     .pager { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: #fff; }
     .pager.active { background: var(--primary); color: #fff; border: none; }
 
-    footer { margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--border); color: var(--muted); text-align: center; font-size: 0.9rem; }
 
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; padding: 16px 0; }
@@ -61,7 +60,7 @@
         <h1>Учитесь эффективно и удобно онлайн</h1>
         <p>Поиск курсов, фильтры по тегам и персональные рекомендации. Белый фон для комфортного восприятия и фокус на контенте.</p>
         <div class="searchRow">
-          <a href="{% url 'courses:course_list' %}" class="cta primary">Посмотреть курсы</a>
+          <a href="{% url 'courses:course_list' %}" style="background: #8DDDFF;" class="cta primary">Посмотреть курсы</a>
           <a href="#about" class="cta" style="border:1px solid var(--border);">Узнать больше</a>
         </div>
       </div>
@@ -96,14 +95,22 @@
       
 
       <div class="grid" id="coursesGrid" style="margin-top:12px;">
-        <article class="card">
-          <img src="{% static 'img/11.png' %}">
-          <div class="cardContent">
-            <div class="cardTitle">HTML и CSS: Введение</div>
-            <div class="cardMeta">3 часа • Видеоуроки</div>
-            <span class="tag">Базовый</span>
-          </div>
-        </article>
+        {% for course in courses %}
+        <a href="{% url 'courses:course_detail' course.id %}" class="text-decoration-none">
+          <article class="card">
+            {% if course.images %}
+              <img src="{{ course.images.url }}">
+            {% else %}
+              <img src="{% static 'img/11.png' %}">
+            {% endif %}
+            <div class="cardContent">
+              <div class="cardTitle">{{course.title}}</div>
+              <div class="cardMeta">3 часа • Видеоуроки</div>
+              <span class="tag">Базовый</span>
+            </div>
+          </article>
+        </a>
+        {% endfor %}
       </div>
 
       <div class="pagination" aria-label="Постраничная навигация" id="pagination">
@@ -117,80 +124,6 @@
     </section>
   </main>
 
-  <footer id="contact" role="contentinfo" aria-label="Контакты">
-    <div class="container" style="padding: 0 12px;">
-      <p>© 2026 Обучающая платформа. Все права защищены.</p>
-      <p>Свяжитесь: support@example.com</p>
-    </div>
-  </footer>
-
-  <script>
-
-    const gridEl = document.getElementById('coursesGrid');
-    const searchInput = document.getElementById('globalSearch');
-    const tagFilter = document.getElementById('tagFilter');
-    const paginationEl = document.getElementById('pagination');
-    const ITEMS_PER_PAGE = 4;
-
-    let currentPage = 1;
-    let filteredData = coursesData;
-
-    function applyFilters() {
-      const q = searchInput.value.trim().toLowerCase();
-      const selectedTag = tagFilter.value;
-
-      filteredData = coursesData.filter(c => {
-        const matchesQ = q === '' || c.title.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q);
-        const matchesTag = selectedTag === 'all' || c.tag === selectedTag;
-        return matchesQ && matchesTag;
-      });
-
-      currentPage = 1;
-      renderGrid();
-    }
-
-    function renderGrid() {
-      gridEl.innerHTML = '';
-      const start = (currentPage - 1) * ITEMS_PER_PAGE;
-      const pageItems = filteredData.slice(start, start + ITEMS_PER_PAGE);
-
-      if (pageItems.length === 0) {
-        gridEl.innerHTML = '<p style="color:var(--muted); padding:12px;">Нет курсов, соответствующих запросу.</p>';
-      } else {
-        pageItems.forEach(c => gridEl.appendChild(renderCard(c)));
-      }
-
-      renderPagination();
-    }
-
-    function renderPagination() {
-      paginationEl.innerHTML = '';
-      const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-      if (totalPages <= 1) return;
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'pager' + (i === currentPage ? ' active' : '');
-        btn.textContent = i;
-        btn.addEventListener('click', () => {
-          currentPage = i;
-          renderGrid();
-        });
-        paginationEl.appendChild(btn);
-      }
-    }
-
-    // События фильтров
-    searchInput.addEventListener('input', () => {
-      applyFilters();
-    });
-    tagFilter.addEventListener('change', () => {
-      applyFilters();
-    });
-
-    // Инициализация
-    renderGrid();
-  </script>
 </body>
 </html>
 {% endblock %}

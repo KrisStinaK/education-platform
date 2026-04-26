@@ -85,10 +85,9 @@
 
     .message {
         margin-top: 20px;
-        color: #ff3c00;
-        font-size: 20px;
+        color: #ffffff;
+        font-size: 17px;
     }
-
 
 </style>
     <div class="container">
@@ -109,7 +108,7 @@
             </form>
             <p>Нет аккаунта? <a href="{% url 'users:signup' %}">Создайте его за минуту.</a></p>
             {% if form.errors %}
-                <div class="message" id="message">Неверный логин или пароль</div>
+                <div style="background: #ff00c8; border-radius: 5px;" class="message" id="message">Неверный логин или пароль</div>
             {% endif %}
         </div>
     </div>

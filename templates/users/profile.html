@@ -21,7 +21,7 @@
             height: 120px;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid #FFE345;
+            border: 3px solid #6145ff;
         }
         .avatar img {
             width: 100%;
@@ -54,7 +54,7 @@
         .stat h2 {
             margin: 0;
             font-size: 1.5em;
-            color: #FFE345;
+            color: #000000;
         }
         .stat p {
             margin-top: 8px;
@@ -135,17 +135,17 @@
         </div>
         <div class="user-info">
             <h1>{{user.username}}</h1>
-            <p>{{user.profile.bio}}</p>
+            <p>Статус: {{user.profile.bio}}</p>
         </div>
     </div>
     
     <div class="stats">
         <div class="stat">
-            <h2>5</h2>
+            <h2>{{completed_courses}}</h2>
             <p>Курсов завершено</p>
         </div>
         <div class="stat">
-            <h2>3</h2>
+            <h2>{{active_courses}}</h2>
             <p>Активных курса</p>
         </div>
         <div class="stat">
@@ -156,25 +156,19 @@
     
     <div class="courses-progress">
         <div class="section-title">Ваши курсы</div>
+            {% for course in courses %}
+                {% if course.id in user_enrollments %}
+                    <div class="course">
+                        <div class="course-title">{{course.title}}</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <small class="text-muted">Нет записей на курсы</small>
+            {% endfor %}
         
-        <div class="course">
-            <div class="course-title">HTML и CSS для начинающих</div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 80%;"></div>
-            </div>
-        </div>
-        <div class="course">
-            <div class="course-title">JavaScript базовый уровень</div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 60%;"></div>
-            </div>
-        </div>
-        <div class="course">
-            <div class="course-title">Основы Python</div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 50%;"></div>
-            </div>
-        </div>
     </div>
     
     <div class="buttons">

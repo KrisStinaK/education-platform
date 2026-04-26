@@ -27,11 +27,13 @@ def course_list(request):
 
     # Проверка записей пользователя
     user_enrollments = Enrollment.objects.filter(user=request.user).values_list('course_id', flat=True)
-    return render(request, 'courses/course_list.html', {
+    context = {
         'courses': courses,
+        'courses_pop': courses[:5],
         'user_enrollments': user_enrollments,
         'query': query,
-    })
+    }
+    return render(request, 'courses/course_list.html', context)
 
 # @login_required
 # def course_detail(request, pk):
