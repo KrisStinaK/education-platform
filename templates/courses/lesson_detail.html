@@ -223,92 +223,55 @@
             }}
     </style>
     <div class="container">
+        <div class="lesson-title">Название урока: {{lesson.title}}</div>
+                    <div class="lesson-info">
+                        <div>Автор: {{course.instructor}}</div>
+                        <div>Дата публикации: {{lesson.created_at|date:"d.m.Y"}}</div>
+                    </div>
         <div class="progress-container">
             <ul id="progressbar">
+                {% for i in len_steps|get_range %}
                 <li class="active" 
-                    id="step1">
-                    <strong>Step 1</strong>
+                    id="step {{i}}">
+                    <strong>Шаг {{i}}</strong>
                 </li>
-                <li id="step2">
-                      <strong>Step 2</strong>
-                  </li>
-                <li id="step3">
-                      <strong>Step 3</strong>
-                  </li>
-                <li id="step4">
-                      <strong>Step 4</strong>
-                  </li>
+                {% endfor %}
             </ul>
+            
             <div class="progress">
                 <div class="progress-bar"></div>
             </div>
         </div>
         <div class="step-container">
-            <fieldset>
-                <div class="lesson-title">Название урока: {{lesson.title}}</div>
-                    <div class="lesson-info">
-                        <div>Автор: {{course.instructor}}</div>
-                        <div>Дата публикации: {{lesson.created_at|date:"d.m.Y"}}</div>
-                    </div>
-                    <div class="video-section">
+            <!-- <fieldset>
+                
+                     <div class="video-section">
                                 <h2>Видеоурок</h2>
                             <iframe width="100%" src="{{lesson.url}}" style="border: none;" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-                    </div>
+                    </div> 
                 
-                <input type="button"
+                 <input type="button"
                        name="next-step"
                        class="next-step"
                        value="Далее" />
-            </fieldset>
-            <fieldset>
-                
-                <div class="container2">
-                    
-                    
-                    <div class="lesson-description">
-                        <h2>Описание урока</h2>
-                        {% if lesson.images %}
-                            <img src="{{lesson.images.url}}" alt="">
-                        {% endif %}
-                        <p>{{lesson.content|markdown}}</p>
-
-                    </div>
-                <input type="button"
-                       name="next-step" 
-                       class="next-step" 
-                       value="Далее" />
-                <input type="button"
-                       name="previous-step" 
-                       class="previous-step" 
-                       value="Назад" />
-            </fieldset>
-            <fieldset>
-                <h2>Welcome To GFG Step 3</h2>
-                <input type="button" 
-                       name="next-step" 
-                       class="next-step" 
-                       value="Final Step" />
-                <input type="button" 
-                       name="previous-step" 
-                       class="previous-step" 
-                       value="Назад" />
-            </fieldset>
+            </fieldset> -->
+            {% for step in steps %}
             <fieldset>
                 <div class="finish">
-                    <h2 class="text">
-                        <strong><a href="{url 'quizzes:quiz_detail' lesson.test.id}"></a></strong>
-                    </h2>
+                    <div>{{step.title}}</div>
+                    <div>{{step.content}}</div>
                 </div>
                 <input type="button" 
                        name="next-step" 
                        class="next-step" 
                        value="Следующий урок" />
-                <input type="button" 
+                <!-- <input type="button" 
                        name="previous-step" 
                        class="previous-step"
-                       value="Назад" />
+                       value="Назад" /> -->
                 
             </fieldset>
+            {% endfor %}
         </div>
     </div>
     

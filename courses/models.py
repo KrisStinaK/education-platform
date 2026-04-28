@@ -46,19 +46,29 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lessons")
     title = models.CharField(max_length=200)
+    description = models.TextField()
+    is_published = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Step(models.Model):
+    lesson = models.ForeignKey(Lesson, related_name='steps', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
     content = models.TextField()
     images = models.ImageField(blank="True", upload_to="images")
     file = models.FileField(blank="True", upload_to="files")
     url = models.URLField(blank="True")
     order = models.PositiveIntegerField(default=0)
-    is_published = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    
 
     class Meta:
         ordering = ["order"]
 
     def __str__(self):
-        return f"{self.course.title} - {self.title}"
+        return f"{self.lesson.title} - {self.title}"
 
 
 class Enrollment(models.Model):

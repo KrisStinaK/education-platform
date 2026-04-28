@@ -6,6 +6,7 @@ admin.site.register(Lesson)
 admin.site.register(Enrollment)
 admin.site.register(CourseProgress)
 admin.site.register(Comment)
+admin.site.register(Step)
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):

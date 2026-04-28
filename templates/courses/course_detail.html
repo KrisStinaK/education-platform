@@ -41,7 +41,7 @@
                 </div>
                 <p class="mb-1">{{ lesson.content|truncatewords:15 }}</p>
                 {% if lesson in course_progress.completed_lessons.all %}
-                <p>(Пройден)</p>
+                <p>(Пройден✅)</p>
                 {% else %}
                 <a href="{% url 'courses:mark_lesson_complete' lesson.id %}">Отметить как пройденный</a>
                 {% endif %}

@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.db.models import Q
 from django.db.models import Count
-from .models import Course, Lesson, Enrollment, CourseProgress
+from .models import Course, Lesson, Enrollment, CourseProgress, Step
 from .forms import LessonUpdateForm
 
 class CourseCreateView(CreateView): # новое изменение
@@ -91,6 +91,8 @@ def mark_lesson_complete(request, lesson_id):
 def lesson_detail(request, course_id, lesson_id):
     course = get_object_or_404(Course, pk=course_id, is_active=True)
     lesson = get_object_or_404(Lesson, pk=lesson_id, course=course, is_published=True)
+    steps = Step.objects.filter(lesson=lesson_id)
+    len_steps = len(steps)
 
     # Проверка записи на курс
     enrollment = Enrollment.objects.filter(
@@ -101,12 +103,16 @@ def lesson_detail(request, course_id, lesson_id):
     if not enrollment:
         messages.error(request, 'Сначала запишитесь на курс!')
         return redirect('courses:course_detail', pk=course_id)
-
-    return render(request, 'courses/lesson_detail.html', {
+    
+    context = {
         'course': course,
         'lesson': lesson,
         'enrollment': enrollment,
-    })
+        'steps': steps,
+        'len_steps': len_steps
+    }
+
+    return render(request, 'courses/lesson_detail.html', context)
 
 @login_required
 def lesson_delete_view(request, course_id, lesson_id):
