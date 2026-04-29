@@ -65,14 +65,6 @@
                     {% if enrollment %}Активный{% else %}Доступен{% endif %}
                 </p>
                 <p><strong>Прогресс:</strong> {{ course_progress.completed_lessons.count }} из {{ lessons.count }} уроков завершено</p>
-                <!-- <p>
-                    <strong>Прогресс:</strong>
-                    {% if enrollment %}
-                    {{ enrollment.progress }}%
-                {% else %}
-                    Не начат
-                {% endif %}
-                </p> -->
                 {% if lessons.first.id %}
                 <a href="{% url 'courses:lesson_detail' course.id lessons.first.id %}" class="btn btn-primary w-100" style="background: #8DDDFF; border: none;">Начать обучение</a>
                 {% endif %}

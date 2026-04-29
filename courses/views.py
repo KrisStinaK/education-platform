@@ -4,10 +4,11 @@ from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.db.models import Q
 from django.db.models import Count
-from .models import Course, Lesson, Enrollment, CourseProgress, Step
-from .forms import LessonUpdateForm
+from .models import Course, Lesson, Enrollment, CourseProgress, Step, Comment
+from .forms import LessonUpdateForm, CommentForm
 
-class CourseCreateView(CreateView): # новое изменение
+
+class CourseCreateView(CreateView):
     model = Course
     template_name = 'courses/course_create.html'
     fields = ['title', 'description']
@@ -34,27 +35,6 @@ def course_list(request):
         'query': query,
     }
     return render(request, 'courses/course_list.html', context)
-
-# @login_required
-# def course_detail(request, pk):
-#     course = get_object_or_404(Course, pk=pk, is_active=True)
-#     lessons = course.lessons.filter(is_published=True)
-
-#     # Проверка записи
-#     enrollment = Enrollment.objects.filter(user=request.user, course=course).first()
-
-#     if request.method == 'POST':
-#         if not enrollment:
-#             Enrollment.objects.create(user=request.user, course=course)
-#             messages.success(request, 'Вы успешно записались на курс!')
-#         return redirect('courses:course_detail', pk=pk)
-
-#     return render(request, 'courses/course_detail.html', {
-#         'course': course,
-#         'lessons': lessons,
-#         'enrollment': enrollment,
-#     })
-
 
 @login_required
 def course_detail(request, pk):
@@ -93,6 +73,22 @@ def lesson_detail(request, course_id, lesson_id):
     lesson = get_object_or_404(Lesson, pk=lesson_id, course=course, is_published=True)
     steps = Step.objects.filter(lesson=lesson_id)
     len_steps = len(steps)
+    comments = Comment.objects.filter(lesson=lesson.id)
+
+    form_comm = CommentForm(request.POST or None)
+
+    if request.method == 'POST':
+        form_comm = CommentForm(request.POST)
+        if form_comm.is_valid():
+            article = form_comm.save(commit=False)
+            article.user = request.user
+            article.lesson = lesson
+            article.save()
+            form_comm.save()
+            messages.success(request, f'Комментарий успешно добавлен.')
+            return redirect('courses:course_detail', lesson.course.id)
+        else:
+            form_comm = CommentForm()
 
     # Проверка записи на курс
     enrollment = Enrollment.objects.filter(
@@ -109,7 +105,9 @@ def lesson_detail(request, course_id, lesson_id):
         'lesson': lesson,
         'enrollment': enrollment,
         'steps': steps,
-        'len_steps': len_steps
+        'len_steps': len_steps,
+        'comments': comments,
+        'form_comm': form_comm
     }
 
     return render(request, 'courses/lesson_detail.html', context)

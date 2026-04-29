@@ -144,6 +144,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
+            margin-top: 50px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .comments-section h3 {
@@ -167,14 +168,14 @@
             display: inline-block;
             padding: 10px 20px;
             margin-top: 15px;
-            background-color: #3498db;
+            background-color: #0099ff;
             color: #fff;
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s;
         }
         .btn:hover {
-            background-color: #2980b9;
+            background-color: #0099ff;
         }
         .buttons {
             margin-top: 40px;
@@ -232,7 +233,7 @@
             <ul id="progressbar">
                 {% for i in len_steps|get_range %}
                 <li class="active" 
-                    id="step {{i}}">
+                    id="step{{i}}">
                     <strong>Шаг {{i}}</strong>
                 </li>
                 {% endfor %}
@@ -243,49 +244,61 @@
             </div>
         </div>
         <div class="step-container">
-            <!-- <fieldset>
-                
-                     <div class="video-section">
-                                <h2>Видеоурок</h2>
-                            <iframe width="100%" src="{{lesson.url}}" style="border: none;" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-                    </div> 
-                
-                 <input type="button"
-                       name="next-step"
-                       class="next-step"
-                       value="Далее" />
-            </fieldset> -->
             {% for step in steps %}
             <fieldset>
                 <div class="finish">
                     <div>{{step.title}}</div>
                     <div>{{step.content}}</div>
                 </div>
-                <input type="button" 
-                       name="next-step" 
-                       class="next-step" 
-                       value="Следующий урок" />
-                <!-- <input type="button" 
-                       name="previous-step" 
-                       class="previous-step"
-                       value="Назад" /> -->
+                {% if forloop.first %}
+                    <input type="button" 
+                        name="next-step" 
+                        class="next-step" 
+                        value="Далее" />
+                {% elif forloop.last %}
+                    <a href="{% url 'courses:mark_lesson_complete' lesson.id %}">
+                    <input type="button" 
+                            name="next-step" 
+                            class="next-step" 
+                            value="✅" /></a>
+                    <input type="button" 
+                        name="previous-step" 
+                        class="previous-step"
+                        value="Назад" />
+                {% else %}
+                    <input type="button" 
+                        name="next-step" 
+                        class="next-step" 
+                        value="Далее" />
+                    <input type="button" 
+                        name="previous-step" 
+                        class="previous-step"
+                        value="Назад" />
+                {% endif %}
                 
             </fieldset>
+            {% empty %}
+                <p align="center">Шагов пока нет</p>
             {% endfor %}
         </div>
     </div>
     
         <div class="comments-section">
             <h3>Комментарии</h3>
+            {% for comm in comments %}
             <div class="comment">
-                <div class="comment-author">Пользователь1</div>
-                <div class="comment-text">Отличный урок! Всё понятно и доступно.</div>
+                <div class="comment-author">{{comm.user}}</div>
+                <div class="comment-text">{{comm.content}}</div>
+                <div class="comment-text">{{comm.created_at}}</div>
             </div>
-            <div class="comment">
-                <div class="comment-author">Пользователь2</div>
-                <div class="comment-text">Спасибо! Хотелось бы больше практических заданий.</div>
-            </div>
-            <a href="#" class="btn">Оставить комментарий</a>
+            {% empty %}
+                <p>Комментариев пока нет</p>
+            {% endfor %}    
+            <form method="post">
+                {% csrf_token %}
+                {{form_comm}}
+                <button class="btn" type="submit">Отправить</button>
+            </form>
                         {% if course.instructor == user %}
                 <div class="buttons">
                     <form action="{% url 'courses:lesson_edit' course.id lesson.id %}">

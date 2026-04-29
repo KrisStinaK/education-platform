@@ -115,35 +115,6 @@
 }
     </style>
     <body>
-        <!-- <nav class="navbar navbar-expand-lg navbar-dark" style="background: #ffffff; padding: 3px;" >
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'courses:home' %}">😺 Умный Кот</a>
-
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    
-                    <a class="nav-link "  style="color: black;" href="{% url 'courses:course_list' %}">Курсы</a>
-                    <a class="nav-link" style="color: black;" href="{% url 'chat:chat_rooms' %}">Чат</a>
-                    <a class="nav-link" style="color: black;" href="{% url 'quizzes:quiz_list' %}">Тесты</a>
-                    <a class="nav-link" style="color: black;" href="{% url 'users:profile' %}">Профиль</a>
-                    <img style="margin-left: 25px; max-width: 35px; max-height: 35px;" class="rounded-circle article-img" src="{{ user.profile.image.url }}">
-                    <b><a style="color: rgb(0, 0, 0);" class="nav-link" href="{% url 'users:profile' %}">{{user.username}}</a></b>
-                    
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button id="b1" class="nav-link" height="10px" type="submit">Выйти</button>
-                    </form>
-                    
-                {% else %}
-                    <a class="nav-link" href="{% url 'login' %}">Войти</a>
-                    <a class="nav-link" href="{% url 'users:signup' %}">Регистрация</a>
-                {% endif %}
-            </div>
-            <button class="round" type="button" onclick="window.myDialog.show()">
-                    <b>...</b>
-                </button>
-        </div>
-    </nav> -->
         <header class="header">
             <div class="container">
                 <div class="header-inner">
@@ -217,7 +188,7 @@
         <footer id="contact" role="contentinfo" aria-label="Контакты">
             <div class="container" style="padding: 0 12px;">
                 <p>© 2026 Обучающая платформа. Все права защищены.</p>
-                <p>Свяжитесь: support@example.com</p>
+                <p>Свяжитесь: umniy_cat@gmail.com</p>
             </div>
         </footer>
     </body>
